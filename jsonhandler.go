@@ -29,7 +29,7 @@ func New(handler func(http.ResponseWriter, *http.Request) interface{}) http.Hand
 			if jsonmap, ok := resp.(*jsondata.Map); ok {
 				fmt.Fprint(w, jsonmap)
 			} else if err, ok := resp.(error); ok {
-				writeJson(w, jsondata.Map{"error": true, "message": err})
+				writeJson(w, jsondata.Map{"error": true, "message": err.Error()})
 			} else {
 				// for arbitrary data
 				writeJson(w, resp)
