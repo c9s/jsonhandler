@@ -15,13 +15,19 @@ func writeJson(w http.ResponseWriter, val interface{}) error {
 	return nil
 }
 
+var ErrorHandler = func(w http.ResponseWriter) {
+	if e := recover(); e != nil {
+		if err, ok := e.(error); ok {
+			writeJson(w, jsondata.Map{"error": true, "message": err})
+		} else {
+			writeJson(w, jsondata.Map{"error": true, "message": e})
+		}
+	}
+}
+
 func New(handler func(http.ResponseWriter, *http.Request) interface{}) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		defer func() {
-			if err := recover(); err != nil {
-				writeJson(w, jsondata.Map{"error": true, "message": err})
-			}
-		}()
+		defer ErrorHandler(w)
 
 		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 		var resp interface{} = handler(w, r)
