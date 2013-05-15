@@ -5,7 +5,7 @@ import "fmt"
 import "encoding/json"
 import "jsondata"
 
-var Debug = true
+var Debug = false
 
 const Padding = "  "
 
@@ -35,7 +35,9 @@ func New(handler func(http.ResponseWriter, *http.Request) interface{}) http.Hand
 	return func(w http.ResponseWriter, r *http.Request) {
 		defer ErrorHandler(w, r)
 
-		fmt.Println(r.Method, r.RequestURI)
+		if Debug {
+			fmt.Println(r.Method, r.RequestURI)
+		}
 
 		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 		var resp interface{} = handler(w, r)
