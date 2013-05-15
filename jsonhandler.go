@@ -23,7 +23,7 @@ var ErrorHandler = func(w http.ResponseWriter, r *http.Request) {
 	if e := recover(); e != nil {
 		if err, ok := e.(error); ok {
 			fmt.Println("ERROR: ", r.RequestURI, err)
-			writeJson(w, jsondata.Map{"error": true, "message": err})
+			writeJson(w, jsondata.Map{"error": true, "message": err.Error()})
 		} else {
 			fmt.Println("ERROR: ", r.RequestURI, e)
 			writeJson(w, jsondata.Map{"error": true, "message": e})
