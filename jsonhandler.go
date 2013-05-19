@@ -5,8 +5,6 @@ import "fmt"
 import "encoding/json"
 import "jsondata"
 
-var Debug = false
-
 const Padding = "  "
 
 // General Function to write json response.
@@ -34,29 +32,15 @@ var ErrorHandler = func(w http.ResponseWriter, r *http.Request) {
 func New(handler func(http.ResponseWriter, *http.Request) interface{}) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		defer ErrorHandler(w, r)
-
-		if Debug {
-			fmt.Println(r.Method, r.RequestURI)
-		}
-
 		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 		var resp interface{} = handler(w, r)
 		if resp != nil {
 			if jsonmap, ok := resp.(*jsondata.Map); ok {
-				if Debug {
-					fmt.Println(Padding, jsonmap)
-				}
 				fmt.Fprint(w, jsonmap)
 			} else if err, ok := resp.(error); ok {
-				if Debug {
-					fmt.Println(Padding, err)
-				}
 				writeJson(w, jsondata.Map{"error": true, "message": err.Error()})
 			} else {
 				// for arbitrary data
-				if Debug {
-					fmt.Println(Padding, resp)
-				}
 				writeJson(w, resp)
 			}
 		}
