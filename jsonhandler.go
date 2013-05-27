@@ -1,5 +1,6 @@
 package jsonhandler
 
+import "runtime/debug"
 import "net/http"
 import "fmt"
 import "encoding/json"
@@ -22,8 +23,9 @@ var ErrorHandler = func(w http.ResponseWriter, r *http.Request) {
 		if err, ok := e.(error); ok {
 			fmt.Println("ERROR: ", r.RequestURI, err)
 			writeJson(w, jsondata.Map{"error": true, "message": err.Error()})
+            debug.PrintStack()
 		} else {
-			fmt.Println("ERROR: ", r.RequestURI, e)
+			fmt.Println("RESPONSE ERROR: ", r.RequestURI, e)
 			writeJson(w, jsondata.Map{"error": true, "message": e})
 		}
 	}
