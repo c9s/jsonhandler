@@ -12,7 +12,7 @@ import (
 const Padding = "  "
 
 // General Function to write json response.
-func writeJson(w http.ResponseWriter, val interface{}) error {
+func WriteJson(w http.ResponseWriter, val interface{}) error {
 	b, err := json.Marshal(val)
 	if err != nil {
 		return err
@@ -26,10 +26,10 @@ var ErrorHandler = func(w http.ResponseWriter, r *http.Request) {
 		if err, ok := e.(error); ok {
 			log.Println("ERROR: ", r.RequestURI, err)
 			debug.PrintStack()
-			writeJson(w, jsondata.Map{"error": true, "message": err.Error()})
+			WriteJson(w, jsondata.Map{"error": true, "message": err.Error()})
 		} else {
 			log.Println("RESPONSE ERROR: ", r.RequestURI, e)
-			writeJson(w, jsondata.Map{"error": true, "message": e})
+			WriteJson(w, jsondata.Map{"error": true, "message": e})
 		}
 	}
 }
@@ -44,10 +44,10 @@ func New(handler func(http.ResponseWriter, *http.Request) interface{}) http.Hand
 				fmt.Fprint(w, jsonmap)
 				resp = nil
 			} else if err, ok := resp.(error); ok {
-				writeJson(w, jsondata.Map{"error": true, "message": err.Error()})
+				WriteJson(w, jsondata.Map{"error": true, "message": err.Error()})
 			} else {
 				// for arbitrary data
-				writeJson(w, resp)
+				WriteJson(w, resp)
 				resp = nil // free
 			}
 		}
