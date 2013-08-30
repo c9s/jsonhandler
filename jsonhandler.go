@@ -38,15 +38,17 @@ func New(handler func(http.ResponseWriter, *http.Request) interface{}) http.Hand
 	return func(w http.ResponseWriter, r *http.Request) {
 		defer ErrorHandler(w, r)
 		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-		var resp interface{} = handler(w, r)
-		if resp != nil {
+		if resp := handler(w, r); resp != nil {
+			// if resp != nil {
 			if jsonmap, ok := resp.(*jsondata.Map); ok {
 				fmt.Fprint(w, jsonmap)
+				resp = nil
 			} else if err, ok := resp.(error); ok {
 				writeJson(w, jsondata.Map{"error": true, "message": err.Error()})
 			} else {
 				// for arbitrary data
 				writeJson(w, resp)
+				resp = nil // free
 			}
 		}
 	}
