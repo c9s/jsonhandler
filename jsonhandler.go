@@ -21,6 +21,18 @@ func WriteJson(w http.ResponseWriter, val interface{}) error {
 	return nil
 }
 
+func WriteErrorJson(w http.ResponseWriter, e interface{}) error {
+	if err, ok := e.(error); ok {
+		log.Println("ERROR: ", err)
+		debug.PrintStack()
+		return WriteJson(w, jsondata.Map{"error": true, "message": err.Error()})
+	} else {
+		log.Println("RESPONSE ERROR: ", e)
+		return WriteJson(w, jsondata.Map{"error": true, "message": e})
+	}
+	return WriteJson(w, e)
+}
+
 var ErrorHandler = func(w http.ResponseWriter, r *http.Request) {
 	if e := recover(); e != nil {
 		if err, ok := e.(error); ok {
