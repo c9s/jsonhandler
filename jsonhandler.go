@@ -13,6 +13,7 @@ const Padding = "  "
 
 // General Function to write json response.
 func WriteJson(w http.ResponseWriter, val interface{}) error {
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	b, err := json.Marshal(val)
 	if err != nil {
 		return err
@@ -49,10 +50,10 @@ var ErrorHandler = func(w http.ResponseWriter, r *http.Request) {
 func New(handler func(http.ResponseWriter, *http.Request) interface{}) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		defer ErrorHandler(w, r)
-		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 		if resp := handler(w, r); resp != nil {
 			// if resp != nil {
 			if jsonmap, ok := resp.(*jsondata.Map); ok {
+				w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 				fmt.Fprint(w, jsonmap)
 				resp = nil
 			} else if err, ok := resp.(error); ok {
