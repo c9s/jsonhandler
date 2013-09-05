@@ -11,6 +11,10 @@ import (
 
 const Padding = "  "
 
+func WriteJsonHeader(w http.ResponseWriter) {
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+}
+
 // General Function to write json response.
 func WriteJson(w http.ResponseWriter, val interface{}) error {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
