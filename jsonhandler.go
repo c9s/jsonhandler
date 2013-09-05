@@ -11,7 +11,7 @@ import (
 
 const Padding = "  "
 
-func WriteJsonHeader(w http.ResponseWriter) {
+func WriteHeader(w http.ResponseWriter) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 }
 
