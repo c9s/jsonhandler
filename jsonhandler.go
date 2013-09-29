@@ -3,7 +3,7 @@ package jsonhandler
 import "net/http"
 import "fmt"
 import "encoding/json"
-import "jsondata"
+import "github.com/c9s/jsondata"
 
 // General Function to write json response.
 func writeJson(w http.ResponseWriter, val interface{}) error {
