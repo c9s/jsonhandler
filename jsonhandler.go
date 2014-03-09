@@ -3,7 +3,7 @@ package jsonhandler
 import (
 	"encoding/json"
 	"fmt"
-	"jsondata"
+	"github.com/c9s/jsondata"
 	"log"
 	"net/http"
 	"runtime/debug"
