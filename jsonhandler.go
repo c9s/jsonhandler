@@ -15,6 +15,11 @@ func WriteHeader(w http.ResponseWriter) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 }
 
+func DecodeBody(r *http.Request, val interface{}) error {
+	decoder := json.NewDecoder(r.Body)
+	return decoder.Decode(val)
+}
+
 // General Function to write json response.
 func WriteJson(w http.ResponseWriter, val interface{}) error {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
