@@ -21,26 +21,25 @@ func DecodeBody(r *http.Request, val interface{}) error {
 }
 
 // General Function to write json response.
-func WriteJson(w http.ResponseWriter, val interface{}) error {
+func WriteJson(w http.ResponseWriter, val interface{}) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	b, err := json.Marshal(val)
 	if err != nil {
-		return err
+		WriteErrorJson(w, err)
 	}
 	fmt.Fprint(w, string(b))
-	return nil
 }
 
-func WriteErrorJson(w http.ResponseWriter, e interface{}) error {
+func WriteErrorJson(w http.ResponseWriter, e interface{}) {
 	if err, ok := e.(error); ok {
 		log.Println("ERROR: ", err)
 		debug.PrintStack()
-		return WriteJson(w, jsondata.Map{"error": true, "message": err.Error()})
+		WriteJson(w, jsondata.Map{"error": true, "message": err.Error()})
 	} else {
 		log.Println("RESPONSE ERROR: ", e)
-		return WriteJson(w, jsondata.Map{"error": true, "message": e})
+		WriteJson(w, jsondata.Map{"error": true, "message": e})
 	}
-	return WriteJson(w, e)
+	WriteJson(w, e)
 }
 
 var ErrorHandler = func(w http.ResponseWriter, r *http.Request) {
