@@ -30,6 +30,10 @@ func WriteJson(w http.ResponseWriter, val interface{}) {
 	fmt.Fprint(w, string(b))
 }
 
+func WriteError(w http.ResponseWriter, e interface{}) {
+	WriteErrorJson(w, e)
+}
+
 func WriteErrorJson(w http.ResponseWriter, e interface{}) {
 	if err, ok := e.(error); ok {
 		log.Println("ERROR: ", err)
